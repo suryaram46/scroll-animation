@@ -163,8 +163,8 @@ const Sections = () => {
                 </div>
             </div>
 
-            {/* Scroll Sequence 2 Video Effect */}
-            <ScrollSequence folderName="sequence-2" frameCount={167} textConfig="sequence2" />
+            {/* Scroll Sequence 3 Video Effect for Animation 2 */}
+            <ScrollSequence folderName="sequence-3" frameCount={266} textConfig="sequence2" />
 
             {/* Vertical Marquee Section - AntiGravity Interaction */}
             <div className="relative h-[60vh] md:h-[80vh] w-full overflow-hidden bg-white border-y border-slate-200 shadow-inner flex justify-center items-center">

@@ -70,7 +70,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 const ctx = canvas.getContext('2d', { alpha: false }); // Optimize no transparency
                 if (!ctx) return;
 
-                // Maximize DPR for clear images, using default high res if possible
+                // Restoring Max DPR for absolute highest fidelity 4k clarity
                 const dpr = Math.min(window.devicePixelRatio || 1, 3);
                 const width = window.innerWidth;
                 const height = window.innerHeight;
@@ -95,7 +95,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 const isPortrait = canvasRatio < 1;
 
                 if (isPortrait) {
-                    // 1. Draw blurred background "cover" to fill black spaces
+                    // 1. Draw blurred background "cover" to fill black spaces with highest quality
                     let bgWidth = canvas.width;
                     let bgHeight = canvas.height;
                     let bgOffsetX = 0;
@@ -224,6 +224,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
         };
 
         window.addEventListener('resize', handleResize);
+        handleResize(); // Initialize canvas dimensions
         return () => window.removeEventListener('resize', handleResize);
     }, [currentFrame, images]);
 

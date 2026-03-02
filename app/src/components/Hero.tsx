@@ -64,14 +64,20 @@ const Hero = () => {
         let offsetX = 0;
         let offsetY = 0;
 
+        // Slight zoom applied (1.15x) as requested
+        const zoom = 1.15;
+
         // Object-fit: cover logic using physical canvas dimensions
         if (imgRatio > canvasRatio) {
-            drawWidth = height * imgRatio;
-            offsetX = (width - drawWidth) / 2;
+            drawHeight = height * zoom;
+            drawWidth = drawHeight * imgRatio;
         } else {
-            drawHeight = width / imgRatio;
-            offsetY = (height - drawHeight) / 2;
+            drawWidth = width * zoom;
+            drawHeight = drawWidth / imgRatio;
         }
+
+        offsetX = (width - drawWidth) / 2;
+        offsetY = (height - drawHeight) / 2;
 
         ctx.clearRect(0, 0, width, height);
         ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
@@ -166,7 +172,7 @@ const Hero = () => {
 
                     {/* Final Logo Reveal */}
                     <motion.div
-                        className="absolute inset-x-0 bottom-20 md:bottom-32 flex flex-col items-center justify-center text-center px-4"
+                        className="absolute inset-0 md:inset-auto md:inset-x-0 md:bottom-32 flex flex-col items-center justify-center text-center px-4"
                         style={{ opacity: finalLogoOpacity, y: finalLogoY }}
                     >
                         <h1 className="text-3xl md:text-7xl lg:text-8xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] mb-4 leading-tight">
