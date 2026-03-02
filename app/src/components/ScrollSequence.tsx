@@ -211,10 +211,10 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
 
 
     return (
-        <section ref={containerRef} className="relative h-[400vh] bg-slate-900">
+        <section ref={containerRef} className="relative h-[400vh] bg-black">
             {/* Loading Indicator */}
             {imagesLoaded < frameCount && (
-                <div className="sticky top-0 h-screen w-full flex items-center justify-center bg-slate-900 z-50 text-white flex-col gap-4">
+                <div className="sticky top-0 h-screen w-full flex items-center justify-center bg-black z-50 text-white flex-col gap-4">
                     <div className="w-64 h-2 bg-slate-800 rounded-full overflow-hidden">
                         <div
                             className="h-full bg-amber-500 transition-all duration-300 ease-out"
@@ -243,25 +243,25 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                             style={{ opacity: text1Opacity }}
                             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-6"
                         >
-                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] mb-4 text-center">
+                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4 text-center">
                                 Your dream home is waiting.
                             </h2>
                         </motion.div>
 
                         <motion.div
                             style={{ opacity: text2Opacity }}
-                            className="absolute bottom-16 md:bottom-24 left-6 md:left-16 max-w-lg pointer-events-none"
+                            className="absolute top-1/2 -translate-y-1/2 md:bottom-24 md:translate-y-0 left-6 md:left-16 max-w-lg pointer-events-none"
                         >
-                            <h3 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] mb-4">
+                            <h3 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4">
                                 Modern finishes in every corner.
                             </h3>
                         </motion.div>
 
                         <motion.div
                             style={{ opacity: text3Opacity }}
-                            className="absolute top-24 md:top-32 right-6 md:right-16 max-w-lg pointer-events-none text-right"
+                            className="absolute top-1/2 -translate-y-1/2 md:top-32 md:translate-y-0 right-6 md:right-16 max-w-lg pointer-events-none text-right"
                         >
-                            <h3 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] mb-4">
+                            <h3 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4">
                                 Expansive views you won’t<br />find elsewhere.
                             </h3>
                         </motion.div>
@@ -270,7 +270,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                             style={{ opacity: text4Opacity }}
                             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-6 gap-8"
                         >
-                            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] mb-4 uppercase text-center">
+                            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4 uppercase text-center">
                                 Schedule your private<br />tour today.
                             </h2>
                             <motion.button
