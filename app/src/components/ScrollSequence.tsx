@@ -71,7 +71,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 if (!ctx) return;
 
                 // Maximize DPR for clear images, using default high res if possible
-                const dpr = window.devicePixelRatio || 1;
+                const dpr = Math.min(window.devicePixelRatio || 1, 3);
                 const width = window.innerWidth;
                 const height = window.innerHeight;
 
@@ -92,17 +92,52 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 let offsetX = 0;
                 let offsetY = 0;
 
-                // Standard "cover" logic for all devices to remove black bars
-                if (imgRatio > canvasRatio) {
-                    drawWidth = canvas.height * imgRatio;
-                    offsetX = (canvas.width - drawWidth) / 2;
-                } else {
-                    drawHeight = canvas.width / imgRatio;
-                    offsetY = (canvas.height - drawHeight) / 2;
-                }
+                const isPortrait = canvasRatio < 1;
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+                if (isPortrait) {
+                    // 1. Draw blurred background "cover" to fill black spaces
+                    let bgWidth = canvas.width;
+                    let bgHeight = canvas.height;
+                    let bgOffsetX = 0;
+                    let bgOffsetY = 0;
+
+                    if (imgRatio > canvasRatio) {
+                        bgWidth = canvas.height * imgRatio;
+                        bgOffsetX = (canvas.width - bgWidth) / 2;
+                    } else {
+                        bgHeight = canvas.width / imgRatio;
+                        bgOffsetY = (canvas.height - bgHeight) / 2;
+                    }
+
+                    ctx.filter = 'blur(40px) brightness(0.5)';
+                    ctx.drawImage(image, bgOffsetX, bgOffsetY, bgWidth, bgHeight);
+                    ctx.filter = 'none';
+
+                    // 2. Draw sharp zoomed-out image in the center
+                    const coverScale = canvas.height / image.height;
+                    const containScale = canvas.width / image.width;
+                    const blendScale = containScale + (coverScale - containScale) * 0.25;
+
+                    drawWidth = image.width * blendScale;
+                    drawHeight = image.height * blendScale;
+                    offsetX = (canvas.width - drawWidth) / 2;
+                    offsetY = (canvas.height - drawHeight) / 2;
+
+                    ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+
+                } else {
+                    // Standard "cover" logic for desktop
+                    if (imgRatio > canvasRatio) {
+                        drawWidth = canvas.height * imgRatio;
+                        offsetX = (canvas.width - drawWidth) / 2;
+                    } else {
+                        drawHeight = canvas.width / imgRatio;
+                        offsetY = (canvas.height - drawHeight) / 2;
+                    }
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+                }
             }
         });
 
@@ -122,7 +157,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 const ctx = canvas.getContext('2d', { alpha: false });
                 if (!ctx) return;
 
-                const dpr = window.devicePixelRatio || 1;
+                const dpr = Math.min(window.devicePixelRatio || 1, 3);
                 const width = window.innerWidth;
                 const height = window.innerHeight;
 
@@ -142,16 +177,49 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 let offsetX = 0;
                 let offsetY = 0;
 
-                if (imgRatio > canvasRatio) {
-                    drawWidth = canvas.height * imgRatio;
-                    offsetX = (canvas.width - drawWidth) / 2;
-                } else {
-                    drawHeight = canvas.width / imgRatio;
-                    offsetY = (canvas.height - drawHeight) / 2;
-                }
+                const isPortrait = canvasRatio < 1;
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+                if (isPortrait) {
+                    let bgWidth = canvas.width;
+                    let bgHeight = canvas.height;
+                    let bgOffsetX = 0;
+                    let bgOffsetY = 0;
+
+                    if (imgRatio > canvasRatio) {
+                        bgWidth = canvas.height * imgRatio;
+                        bgOffsetX = (canvas.width - bgWidth) / 2;
+                    } else {
+                        bgHeight = canvas.width / imgRatio;
+                        bgOffsetY = (canvas.height - bgHeight) / 2;
+                    }
+
+                    ctx.filter = 'blur(40px) brightness(0.5)';
+                    ctx.drawImage(image, bgOffsetX, bgOffsetY, bgWidth, bgHeight);
+                    ctx.filter = 'none';
+
+                    const coverScale = canvas.height / image.height;
+                    const containScale = canvas.width / image.width;
+                    const blendScale = containScale + (coverScale - containScale) * 0.25;
+
+                    drawWidth = image.width * blendScale;
+                    drawHeight = image.height * blendScale;
+                    offsetX = (canvas.width - drawWidth) / 2;
+                    offsetY = (canvas.height - drawHeight) / 2;
+
+                    ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+
+                } else {
+                    if (imgRatio > canvasRatio) {
+                        drawWidth = canvas.height * imgRatio;
+                        offsetX = (canvas.width - drawWidth) / 2;
+                    } else {
+                        drawHeight = canvas.width / imgRatio;
+                        offsetY = (canvas.height - drawHeight) / 2;
+                    }
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+                }
             }
         };
 
