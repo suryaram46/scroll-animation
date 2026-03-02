@@ -92,32 +92,13 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 let offsetX = 0;
                 let offsetY = 0;
 
-                // Mobile / Portrait specific behavior to reduce zoom
-                const isPortrait = canvasRatio < 1;
-
-                if (isPortrait) {
-                    // For portrait (mobile), we want more of the image's width visible.
-                    // We'll calculate a scale that sits between "contain" and "cover"
-                    const coverScale = canvas.height / image.height;
-                    const containScale = canvas.width / image.width;
-
-                    // A blend factor - 1 means full cover (heavy crop), 0 means full contain (black bars)
-                    // We use 0.25 to show much more of the width (zoomed out further).
-                    const blendScale = containScale + (coverScale - containScale) * 0.25;
-
-                    drawWidth = image.width * blendScale;
-                    drawHeight = image.height * blendScale;
+                // Standard "cover" logic for all devices to remove black bars
+                if (imgRatio > canvasRatio) {
+                    drawWidth = canvas.height * imgRatio;
                     offsetX = (canvas.width - drawWidth) / 2;
-                    offsetY = (canvas.height - drawHeight) / 2;
                 } else {
-                    // Standard "cover" logic for desktop/landscape
-                    if (imgRatio > canvasRatio) {
-                        drawWidth = canvas.height * imgRatio;
-                        offsetX = (canvas.width - drawWidth) / 2;
-                    } else {
-                        drawHeight = canvas.width / imgRatio;
-                        offsetY = (canvas.height - drawHeight) / 2;
-                    }
+                    drawHeight = canvas.width / imgRatio;
+                    offsetY = (canvas.height - drawHeight) / 2;
                 }
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -161,25 +142,12 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 let offsetX = 0;
                 let offsetY = 0;
 
-                const isPortrait = canvasRatio < 1;
-
-                if (isPortrait) {
-                    const coverScale = canvas.height / image.height;
-                    const containScale = canvas.width / image.width;
-                    const blendScale = containScale + (coverScale - containScale) * 0.25;
-
-                    drawWidth = image.width * blendScale;
-                    drawHeight = image.height * blendScale;
+                if (imgRatio > canvasRatio) {
+                    drawWidth = canvas.height * imgRatio;
                     offsetX = (canvas.width - drawWidth) / 2;
-                    offsetY = (canvas.height - drawHeight) / 2;
                 } else {
-                    if (imgRatio > canvasRatio) {
-                        drawWidth = canvas.height * imgRatio;
-                        offsetX = (canvas.width - drawWidth) / 2;
-                    } else {
-                        drawHeight = canvas.width / imgRatio;
-                        offsetY = (canvas.height - drawHeight) / 2;
-                    }
+                    drawHeight = canvas.width / imgRatio;
+                    offsetY = (canvas.height - drawHeight) / 2;
                 }
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -243,39 +211,39 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                             style={{ opacity: text1Opacity }}
                             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-6"
                         >
-                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4 text-center">
+                            <h2 className="text-3xl md:text-5xl lg:text-7xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4 text-center">
                                 Your dream home is waiting.
                             </h2>
                         </motion.div>
 
                         <motion.div
                             style={{ opacity: text2Opacity }}
-                            className="absolute top-1/2 -translate-y-1/2 md:bottom-24 md:translate-y-0 left-6 md:left-16 max-w-lg pointer-events-none"
+                            className="absolute bottom-32 md:bottom-24 left-6 md:left-16 max-w-[250px] md:max-w-lg pointer-events-none"
                         >
-                            <h3 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4">
+                            <h3 className="text-2xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4">
                                 Modern finishes in every corner.
                             </h3>
                         </motion.div>
 
                         <motion.div
                             style={{ opacity: text3Opacity }}
-                            className="absolute top-1/2 -translate-y-1/2 md:top-32 md:translate-y-0 right-6 md:right-16 max-w-lg pointer-events-none text-right"
+                            className="absolute top-28 md:top-32 right-6 md:right-16 max-w-[200px] md:max-w-lg pointer-events-none text-right"
                         >
-                            <h3 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4">
+                            <h3 className="text-xl md:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4">
                                 Expansive views you won’t<br />find elsewhere.
                             </h3>
                         </motion.div>
 
                         <motion.div
                             style={{ opacity: text4Opacity }}
-                            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-6 gap-8"
+                            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-6 gap-6 md:gap-8"
                         >
-                            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-4 uppercase text-center">
+                            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-white drop-shadow-[0_5px_15px_rgba(0,0,0,1)] mb-2 md:mb-4 uppercase text-center">
                                 Schedule your private<br />tour today.
                             </h2>
                             <motion.button
                                 style={{ opacity: ctaOpacity, y: ctaY }}
-                                className="pointer-events-auto bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-10 py-5 rounded-full text-lg shadow-[0_10px_30px_rgba(245,158,11,0.3)] hover:shadow-[0_15px_40px_rgba(245,158,11,0.4)] transition-all transform hover:-translate-y-1"
+                                className="pointer-events-auto bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-8 py-4 md:px-10 md:py-5 rounded-full text-base md:text-lg shadow-[0_10px_30px_rgba(245,158,11,0.3)] hover:shadow-[0_15px_40px_rgba(245,158,11,0.4)] transition-all transform hover:-translate-y-1"
                             >
                                 Book Now
                             </motion.button>
