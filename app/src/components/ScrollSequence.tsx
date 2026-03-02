@@ -70,7 +70,8 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 const ctx = canvas.getContext('2d', { alpha: false }); // Optimize no transparency
                 if (!ctx) return;
 
-                const dpr = Math.min(window.devicePixelRatio || 1, 3); // 4k support
+                // Maximize DPR for clear images, using default high res if possible
+                const dpr = window.devicePixelRatio || 1;
                 const width = window.innerWidth;
                 const height = window.innerHeight;
 
@@ -79,19 +80,44 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 canvas.style.width = `${width}px`;
                 canvas.style.height = `${height}px`;
 
+                // Set high quality smoothing for rendering
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+
                 const canvasRatio = canvas.width / canvas.height;
                 const imgRatio = image.width / image.height;
+
                 let drawWidth = canvas.width;
                 let drawHeight = canvas.height;
                 let offsetX = 0;
                 let offsetY = 0;
 
-                if (imgRatio > canvasRatio) {
-                    drawWidth = canvas.height * imgRatio;
+                // Mobile / Portrait specific behavior to reduce zoom
+                const isPortrait = canvasRatio < 1;
+
+                if (isPortrait) {
+                    // For portrait (mobile), we want more of the image's width visible.
+                    // We'll calculate a scale that sits between "contain" and "cover"
+                    const coverScale = canvas.height / image.height;
+                    const containScale = canvas.width / image.width;
+
+                    // A blend factor - 1 means full cover (heavy crop), 0 means full contain (black bars)
+                    // We use 0.5 to find a happy medium that fills more but shows more.
+                    const blendScale = containScale + (coverScale - containScale) * 0.75;
+
+                    drawWidth = image.width * blendScale;
+                    drawHeight = image.height * blendScale;
                     offsetX = (canvas.width - drawWidth) / 2;
-                } else {
-                    drawHeight = canvas.width / imgRatio;
                     offsetY = (canvas.height - drawHeight) / 2;
+                } else {
+                    // Standard "cover" logic for desktop/landscape
+                    if (imgRatio > canvasRatio) {
+                        drawWidth = canvas.height * imgRatio;
+                        offsetX = (canvas.width - drawWidth) / 2;
+                    } else {
+                        drawHeight = canvas.width / imgRatio;
+                        offsetY = (canvas.height - drawHeight) / 2;
+                    }
                 }
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -115,7 +141,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 const ctx = canvas.getContext('2d', { alpha: false });
                 if (!ctx) return;
 
-                const dpr = Math.min(window.devicePixelRatio || 1, 3);
+                const dpr = window.devicePixelRatio || 1;
                 const width = window.innerWidth;
                 const height = window.innerHeight;
 
@@ -124,19 +150,36 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 canvas.style.width = `${width}px`;
                 canvas.style.height = `${height}px`;
 
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+
                 const canvasRatio = canvas.width / canvas.height;
                 const imgRatio = image.width / image.height;
+
                 let drawWidth = canvas.width;
                 let drawHeight = canvas.height;
                 let offsetX = 0;
                 let offsetY = 0;
 
-                if (imgRatio > canvasRatio) {
-                    drawWidth = canvas.height * imgRatio;
+                const isPortrait = canvasRatio < 1;
+
+                if (isPortrait) {
+                    const coverScale = canvas.height / image.height;
+                    const containScale = canvas.width / image.width;
+                    const blendScale = containScale + (coverScale - containScale) * 0.75;
+
+                    drawWidth = image.width * blendScale;
+                    drawHeight = image.height * blendScale;
                     offsetX = (canvas.width - drawWidth) / 2;
-                } else {
-                    drawHeight = canvas.width / imgRatio;
                     offsetY = (canvas.height - drawHeight) / 2;
+                } else {
+                    if (imgRatio > canvasRatio) {
+                        drawWidth = canvas.height * imgRatio;
+                        offsetX = (canvas.width - drawWidth) / 2;
+                    } else {
+                        drawHeight = canvas.width / imgRatio;
+                        offsetY = (canvas.height - drawHeight) / 2;
+                    }
                 }
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
