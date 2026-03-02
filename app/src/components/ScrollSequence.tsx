@@ -102,8 +102,8 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                     const containScale = canvas.width / image.width;
 
                     // A blend factor - 1 means full cover (heavy crop), 0 means full contain (black bars)
-                    // We use 0.5 to find a happy medium that fills more but shows more.
-                    const blendScale = containScale + (coverScale - containScale) * 0.75;
+                    // We use 0.25 to show much more of the width (zoomed out further).
+                    const blendScale = containScale + (coverScale - containScale) * 0.25;
 
                     drawWidth = image.width * blendScale;
                     drawHeight = image.height * blendScale;
@@ -166,7 +166,7 @@ const ScrollSequence = ({ folderName, frameCount, textConfig }: ScrollSequencePr
                 if (isPortrait) {
                     const coverScale = canvas.height / image.height;
                     const containScale = canvas.width / image.width;
-                    const blendScale = containScale + (coverScale - containScale) * 0.75;
+                    const blendScale = containScale + (coverScale - containScale) * 0.25;
 
                     drawWidth = image.width * blendScale;
                     drawHeight = image.height * blendScale;
